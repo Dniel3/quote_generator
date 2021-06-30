@@ -9,10 +9,8 @@ addEventListener("fetch", function (event) {
     }
     var bookId = event.request.url.split('/')[1];
     var book = yield fetch("https://www.gutenberg.org/files/" + bookId + "/" + bookId + "-0.txt");
-    var result = sanitizeChapter(extractBookContent(yield book.text()));
-    var response = { headers: new Headers() };
-    response.headers.set('Content-Type', 'text/plain');
-    event.respondWith(new Response(result, {
+    var bookContent = sanitizeChapter(extractBookContent(yield book.text()));
+    event.respondWith(new Response(bookContent, {
         status: 200,
         headers: { "content-type": "text/plain" }
     }));
@@ -24,9 +22,9 @@ function extractBookContent(book) {
     var indexStart = indexStartWords
         .map(function (word) { return ({ word: word, position: book.indexOf(word) }); })
         .find(function (_a) {
-        var position = _a.position;
-        return position !== -1;
-    });
+            var position = _a.position;
+            return position !== -1;
+        });
     if (!indexStart)
         throw Error('Failed to find content start');
     var firstChapterStart = indexStart.word.length + indexStart.position;

@@ -14,13 +14,11 @@ addEventListener("fetch", (event) => {
   const bookId = event.request.url.split('/')[1];
 
   const book = await fetch(`https://www.gutenberg.org/files/${bookId}/${bookId}-0.txt`);
-  const result = sanitizeChapter(extractBookContent(await book.text()));
+  const bookContent = sanitizeChapter(extractBookContent(await book.text()));
 
-  const response: Response = { headers: new Headers() } as Response;
-  response.headers.set('Content-Type', 'text/plain');
 
   event.respondWith(
-    new Response(result, {
+    new Response(bookContent, {
       status: 200,
       headers: { "content-type": "text/plain" },
     }),
