@@ -1,8 +1,6 @@
-import { serve } from "https://deno.land/std@0.99.0/http/server.ts";
 
 const endOfBook = '*** END OF THE PROJECT GUTENBERG EBOOK';
 const indexStartWords = ['CONTENTS', 'Contents',];
-const server = serve({ port: 8080 });
 
 addEventListener("fetch", (event) => {
   event.respondWith(
@@ -12,6 +10,7 @@ addEventListener("fetch", (event) => {
     }),
   );
 });
+
 
 function sanitizeChapter(chapterContent: string) {
   return chapterContent.trim().replaceAll(/-{10,}/g, ' ').replaceAll(/\* {3,}\*/g, ' ').replaceAll('\r\n', ' ');
