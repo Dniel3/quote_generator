@@ -2,27 +2,28 @@ const endOfBook = '*** END OF THE PROJECT GUTENBERG EBOOK';
 const indexStartWords = ['CONTENTS', 'Contents',];
 
 addEventListener("fetch", async (event) => {
-  if (event.request.url.indexOf('favicon') !== -1) {
+  try {
+    const [bookId] = event.request.url.split('/').slice(-1);
+    console.log(bookId);
+    const book = await fetch(`https://www.gutenberg.org/files/${bookId}/${bookId}-0.txt`);
+    console.log(book);
+    const bookContent = sanitizeChapter(extractBookContent(await book.text()));
+
+
     event.respondWith(
-      new Response("Hello world", {
+      new Response(bookContent, {
+        status: 200,
+        headers: { "content-type": "text/plain" },
+      }),
+    );
+  } catch {
+    event.respondWith(
+      new Response("Hello give me a valid book", {
         status: 200,
         headers: { "content-type": "text/plain" },
       }),
     );
   }
-
-  const bookId = event.request.url.split('/')[1];
-
-  const book = await fetch(`https://www.gutenberg.org/files/${bookId}/${bookId}-0.txt`);
-  const bookContent = sanitizeChapter(extractBookContent(await book.text()));
-
-
-  event.respondWith(
-    new Response(bookContent, {
-      status: 200,
-      headers: { "content-type": "text/plain" },
-    }),
-  );
 });
 
 function sanitizeChapter(chapterContent: string) {
