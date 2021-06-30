@@ -22,9 +22,9 @@ function extractBookContent(book) {
     var indexStart = indexStartWords
         .map(function (word) { return ({ word: word, position: book.indexOf(word) }); })
         .find(function (_a) {
-            var position = _a.position;
-            return position !== -1;
-        });
+        var position = _a.position;
+        return position !== -1;
+    });
     if (!indexStart)
         throw Error('Failed to find content start');
     var firstChapterStart = indexStart.word.length + indexStart.position;

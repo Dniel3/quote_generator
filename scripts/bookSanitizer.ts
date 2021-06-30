@@ -1,7 +1,7 @@
 const endOfBook = '*** END OF THE PROJECT GUTENBERG EBOOK';
 const indexStartWords = ['CONTENTS', 'Contents',];
 
-addEventListener("fetch", (event) => {
+addEventListener("fetch", async (event) => {
   if (event.request.url.indexOf('favicon') !== -1) {
     event.respondWith(
       new Response("Hello world", {
